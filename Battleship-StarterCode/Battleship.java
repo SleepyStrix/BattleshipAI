@@ -35,18 +35,16 @@ public class Battleship {
 
 	void makeMove() {
 		for(int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8; j++) {
-				if (this.grid[i][j] == -1) {
-					String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(j));
+			if (this.grid[i][i] == -1) {
+				String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
 
-					if (wasHitSunkOrMiss.equals("Hits") ||
-							wasHitSunkOrMiss.equals("Sunk")) {
-						this.grid[i][j] = 1;
-					} else {
-						this.grid[i][j] = 0;
-					}
-					return;
+				if (wasHitSunkOrMiss.equals("Hits") ||
+						wasHitSunkOrMiss.equals("Sunk")) {
+					this.grid[i][i] = 1;
+				} else {
+					this.grid[i][i] = 0;
 				}
+				return;
 			}
 		}
 	}
