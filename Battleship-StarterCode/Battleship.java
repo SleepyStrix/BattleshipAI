@@ -13,7 +13,7 @@ import java.net.InetAddress;
 import java.lang.Thread;
 
 public class Battleship {
-	public static String API_KEY = "API_KEY_HERE"; ///////// PUT YOUR API KEY HERE /////////
+	public static String API_KEY = "249124271"; ///////// PUT YOUR API KEY HERE /////////
 	public static String GAME_SERVER = "battleshipgs.purduehackers.com";
 
 	//////////////////////////////////////  PUT YOUR CODE HERE //////////////////////////////////////
