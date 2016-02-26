@@ -39,11 +39,11 @@ public class Battleship {
 				if (this.grid[i][j] == -1) {
 					String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(j));
 
-					if (wasHitSunkOrMiss.equals("Hits") || 
+					if (wasHitSunkOrMiss.equals("Hits") ||
 							wasHitSunkOrMiss.equals("Sunk")) {
 						this.grid[i][j] = 1;
 					} else {
-						this.grid[i][j] = 0;			
+						this.grid[i][j] = 0;
 					}
 					return;
 				}
@@ -60,7 +60,7 @@ public class Battleship {
 	String data;
 	BufferedReader br;
 	PrintWriter out;
-	Boolean moveMade = False;
+	Boolean moveMade = false;
 
 	public Battleship() {
 		this.grid = new int[8][8];
@@ -86,7 +86,7 @@ public class Battleship {
 			data = br.readLine();
 		} catch (Exception e) {
 			System.out.println("Error: when connecting to the server...");
-			socket = null; 
+			socket = null;
 		}
 
 		if (data == null || data.contains("False")) {
@@ -109,11 +109,11 @@ public class Battleship {
 					this.dataPassthrough = null;
 				}
 			} catch (IOException ioe) {
-				System.out.println("IOException: in gameMain"); 
+				System.out.println("IOException: in gameMain");
 				ioe.printStackTrace();
 			}
 			if (this.data == null) {
-				try { this.socket.close(); } 
+				try { this.socket.close(); }
 				catch (IOException e) { System.out.println("Socket Close Error"); }
 				return;
 			}
@@ -145,7 +145,7 @@ public class Battleship {
 				this.out.print(carrier[1]);
 				out.flush();
 			} else if (data.contains( "Enter")) {
-				this.moveMade = False;
+				this.moveMade = false;
 				this.makeMove();
 			} else if (data.contains("Error" )) {
 				System.out.println("Error: " + data);
@@ -161,23 +161,23 @@ public class Battleship {
 	}
 
 	void placeDestroyer(String startPos, String endPos) {
-		destroyer = new String[] {startPos.toUpperCase(), endPos.toUpperCase()}; 
+		destroyer = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
 
 	void placeSubmarine(String startPos, String endPos) {
-		submarine = new String[] {startPos.toUpperCase(), endPos.toUpperCase()}; 
+		submarine = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
 
 	void placeCruiser(String startPos, String endPos) {
-		cruiser = new String[] {startPos.toUpperCase(), endPos.toUpperCase()}; 
+		cruiser = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
 
 	void placeBattleship(String startPos, String endPos) {
-		battleship = new String[] {startPos.toUpperCase(), endPos.toUpperCase()}; 
+		battleship = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
 
 	void placeCarrier(String startPos, String endPos) {
-		carrier = new String[] {startPos.toUpperCase(), endPos.toUpperCase()}; 
+		carrier = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
 
 	String placeMove(String pos) {
@@ -185,11 +185,11 @@ public class Battleship {
 			System.out.println("Error: Please Make Only 1 Move Per Turn.");
 			System.exit(1); // Close Client
 		}
-		this.moveMade = True;
+		this.moveMade = true;
 
 		this.out.print(pos);
 		out.flush();
-		try { data = this.br.readLine(); } 
+		try { data = this.br.readLine(); }
 		catch(Exception e) { System.out.println("No response after from the server after place the move"); }
 
 		if (data.contains("Hit")) return "Hit";
@@ -206,7 +206,6 @@ public class Battleship {
 		while(true) {
 			bs.connectToServer();
 			if (bs.socket != null) bs.gameMain();
-		}	
+		}
 	}
 }
-
