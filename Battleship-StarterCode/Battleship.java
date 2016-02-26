@@ -31,10 +31,26 @@ public class Battleship {
 		placeCruiser("C0", "C2");
 		placeBattleship("D0", "D3");
 		placeCarrier("E0", "E4");
+
+		placeDestroyer((int)(Math.random() * letters.length), "A1");
 	}
 
 	void makeMove() {
 		for(int i = 0; i < 8; i++) {
+			if (this.grid[i][i] == -1) {
+				String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
+
+				if (wasHitSunkOrMiss.equals("Hits") ||
+						wasHitSunkOrMiss.equals("Sunk")) {
+					this.grid[i][i] = 1;
+				} else {
+					this.grid[i][i] = 0;
+				}
+				return;
+			}
+		}
+
+		for(int i = 7; i <= 0; i--) {
 			if (this.grid[i][i] == -1) {
 				String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
 
