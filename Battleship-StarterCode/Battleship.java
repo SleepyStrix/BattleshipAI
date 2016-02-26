@@ -193,7 +193,7 @@ public class Battleship {
 		catch(Exception e) { System.out.println("No response after from the server after place the move"); }
 
 		if (data.contains("Hit")) return "Hit";
-		else if (data.contains("Sunk")) return "Sun";
+		else if (data.contains("Sunk")) return "Sunk";
 		else if (data.contains("Miss")) return "Miss";
 		else {
 			this.dataPassthrough = data;
