@@ -28,6 +28,8 @@ public class Battleship {
 
 	char[] letters;
 	Tile[][] grid;
+	int WIDTH = 7;
+	boolean hitLastTurn = false;
 
 	void placeShips(String opponentID) {
 		// Fill Grid With -1s
@@ -43,29 +45,31 @@ public class Battleship {
 
 	void makeMove() {
 		for(int i = 0; i < 8; i++) {
-			if (this.step(i)) {
+			if (this.step(i, i)) {
 				return;
 			}
 		}
 
-		for(int i = 7; i <= 0; i--) {
-			if (this.step(i)) {
+		for(int i = 0; i < 8; i++) {
+			if (this.step(WIDTH - i, i)) {
 				return;
 			}
 		}
+
+		// TODO probability thing
 	}
 
-	boolean step(int i) {
-		if (this.grid[i][i].status == Status.NONE) {
+	boolean step(int i, int j) {
+		if (this.grid[i][j].status == Status.NONE) {
 
-			String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
+			String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(j));
 
 			if (wasHitSunkOrMiss.equals("Hits")) {
-				this.grid[i][i].status = Status.HIT;
+				this.grid[i][j].status = Status.HIT;
 			} else if (wasHitSunkOrMiss.equals("Sunk")) {
-				this.grid[i][i].status = Status.SUNK;
+				this.grid[i][j].status = Status.SUNK;
 			} else {
-				this.grid[i][i].status = Status.MISS;
+				this.grid[i][j].status = Status.MISS;
 			}
 
 			return true;
