@@ -27,11 +27,17 @@ public class Battleship {
 	}
 
 	char[] letters;
-	Tile[][] grid;
+	int[][] grid;
+	Tile[][] tileGrid;
 
 	void placeShips(String opponentID) {
 		// Fill Grid With -1s
-		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j].status = Status.NONE; }
+		for(int i = 0; i < tileGrid.length; i++) {
+			for(int j = 0; j < tileGrid[i].length; j++) {
+				tileGrid[i][j] = new Tile(); tileGrid[i][j].probability = 0;
+			}
+		}
+			
 
 		// Place Ships
 		placeDestroyer("A0", "A1");
@@ -42,6 +48,52 @@ public class Battleship {
 	}
 
 	void makeMove() {
+		moveDecision();
+		/*for(int i = 0; i < 8; i++) {
+			if (this.step(i)) {
+				return;
+			}
+		}
+
+		for(int i = 7; i <= 0; i--) {
+			if (this.step(i)) {
+				return;
+			}
+		}*/
+	}
+	
+	void moveDecision() {
+		Tile t = highestProbability();
+		if (t != null) {
+			//fire at position of Tile t
+			
+		} else {
+			diagonalSearch();
+		}
+	}
+	
+	Tile highestProbability() {
+		Tile best = new Tile();
+		best.probability = -1;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Tile t = tileGrid[i][j];
+				if (t.status == Status.NONE) {
+					if (t.probability > best.probability) {
+						best = t;
+					}
+				}
+			}
+		}
+		if (best.probability == -1) {
+			return null;
+		}
+		else {
+			return best;
+		}
+	}
+	
+	void diagonalSearch() {
 		for(int i = 0; i < 8; i++) {
 			if (this.step(i)) {
 				return;
@@ -56,22 +108,65 @@ public class Battleship {
 	}
 
 	boolean step(int i) {
-		if (this.grid[i][i].status == Status.NONE) {
+		if (this.tileGrid[i][i].status == Status.NONE) {
 
 			String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
 
 			if (wasHitSunkOrMiss.equals("Hits")) {
-				this.grid[i][i].status = Status.HIT;
+				this.tileGrid[i][i].status = Status.HIT;
 			} else if (wasHitSunkOrMiss.equals("Sunk")) {
-				this.grid[i][i].status = Status.SUNK;
+				this.tileGrid[i][i].status = Status.SUNK;
 			} else {
-				this.grid[i][i].status = Status.MISS;
+				this.tileGrid[i][i].status = Status.MISS;
 			}
 
 			return true;
 		}
 
 		return false;
+	}
+	
+	void fireAtPosition(int i, int j) {
+		String target = "";
+		String row = "";
+		String col = "";
+		switch (i) {
+			case(0): {
+				row = "A";
+				break;
+			}
+			case(1): {
+				row = "B";
+				break;
+			}
+			case(2): {
+				row = "C";
+				break;
+			}
+			case(3): {
+				row = "D";
+				break;
+			}
+			case(4): {
+				row = "E";
+				break;
+			}
+			case(5): {
+				row = "F";
+				break;
+			}
+			case(6): {
+				row = "G";
+				break;
+			}
+			case(7): {
+				row = "H";
+				break;
+			}
+		}
+		col = "" + j;
+		target = row + col;
+		placeMove(target);
 	}
 
 	////////////////////////////////////// ^^^^^ PUT YOUR CODE ABOVE HERE ^^^^^ //////////////////////////////////////
@@ -86,8 +181,8 @@ public class Battleship {
 	Boolean moveMade = false;
 
 	public Battleship() {
-		this.grid = new Tile[8][8];
-		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j].status = Status.NONE; }
+		this.grid = new int[8][8];
+		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j] = -1; }
 		this.letters = new char[] {'A','B','C','D','E','F','G','H'};
 
 		destroyer = new String[] {"A0", "A0"};
@@ -186,7 +281,7 @@ public class Battleship {
 	void placeDestroyer(String startPos, String endPos) {
 		destroyer = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
-
+	
 	void placeSubmarine(String startPos, String endPos) {
 		submarine = new String[] {startPos.toUpperCase(), endPos.toUpperCase()};
 	}
