@@ -45,6 +45,8 @@ public class Battleship {
 			return false;
 		}
 
+		System.out.println(x1 + ", " + y1 + ", " + x2 + " " + y2);
+
 		// Vertical
 		if (x1 == x2) {
 			if (y1 > y2) {
@@ -82,6 +84,7 @@ public class Battleship {
 	}
 
 	int[] findPosition (int len) {
+		len--;
 		while (true) {
 			// Horizontal
 			if (Math.random() > 0.5) {
@@ -91,6 +94,10 @@ public class Battleship {
 				int y2 = y1;
 
 				if (this.isValidPosition(x1, y1, x2, y2)) {
+					for (int i = x1; i <= x2; i++) {
+						this.ourShips[i][y1].status = Status.TAKEN;
+					}
+
 					return new int[]{x1, y1, x2, y2};
 				}
 			}
@@ -102,6 +109,10 @@ public class Battleship {
 				int y2 = y1 + len;
 
 				if (this.isValidPosition(x1, y1, x2, y2)) {
+					for (int i = y1; i <= y2; i++) {
+						this.ourShips[x1][i].status = Status.TAKEN;
+					}
+
 					return new int[]{x1, y1, x2, y2};
 				}
 			}
@@ -109,36 +120,50 @@ public class Battleship {
 	}
 
 	void placeShips(String opponentID) {
-		this.ourShips = new Tile[WIDTH][WIDTH];
+		this.ourShips = new Tile[WIDTH + 1][WIDTH + 1];
+		this.tileGrid = new Tile[WIDTH + 1][WIDTH + 1];
 
-		for (int i = 0; i < WIDTH; i++) {
-			for (int j = 0; j < WIDTH; j++) {
+		for (int i = 0; i < WIDTH + 1; i++) {
+			for (int j = 0; j < WIDTH + 1; j++) {
 				this.ourShips[i][j] = new Tile();
 			}
 		}
 
 		// Fill Grid With -1s
-		for(int i = 0; i < tileGrid.length; i++) {
-			for(int j = 0; j < tileGrid[i].length; j++) {
-				tileGrid[i][j] = new Tile(); tileGrid[i][j].probability = 0;
+		for(int i = 0; i < WIDTH + 1; i++) {
+			for(int j = 0; j < WIDTH + 1; j++) {
+				tileGrid[i][j] = new Tile();
+				tileGrid[i][j].probability = 0;
 			}
 		}
 
 
 		// Place Ships
 		int[] d = findPosition(2);
+		System.out.println("Format " + this.letters[d[0]] + String.valueOf(d[1]));
 		placeDestroyer(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
 
 		d = findPosition(3);
+
+		System.out.println("Format " + this.letters[d[0]] + String.valueOf(d[1]));
 		placeSubmarine(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
 
 		d = findPosition(3);
+
+		System.out.println("Format " + this.letters[d[0]] + String.valueOf(d[1]));
+
 		placeCruiser(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
 
 		d = findPosition(4);
+
+		System.out.println("Format " + this.letters[d[0]] + String.valueOf(d[1]));
+
 		placeBattleship(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
 
 		d = findPosition(5);
+
+		System.out.println("Format " + this.letters[d[0]] + String.valueOf(d[1]) + "\n" +this.letters[d[2]] + String.valueOf(d[3]));
+
 		placeCarrier(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
 	}
 
@@ -341,6 +366,7 @@ public class Battleship {
 
 	public void gameMain() {
 		while(true) {
+			System.out.println("stuck");
 			try {
 				if (this.dataPassthrough == null) {
 					this.data = this.br.readLine();
