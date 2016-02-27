@@ -17,13 +17,21 @@ public class Battleship {
 	public static String GAME_SERVER = "battleshipgs.purduehackers.com";
 
 	//////////////////////////////////////  PUT YOUR CODE HERE //////////////////////////////////////
+	enum Status {
+		HIT, SUNK, MISS, NONE
+	}
+
+	class Tile {
+		int probability;
+		Status status;
+	}
 
 	char[] letters;
-	int[][] grid;
+	Tile[][] grid;
 
 	void placeShips(String opponentID) {
 		// Fill Grid With -1s
-		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j] = -1; }
+		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j].status = Status.NONE; }
 
 		// Place Ships
 		placeDestroyer("A0", "A1");
@@ -31,38 +39,39 @@ public class Battleship {
 		placeCruiser("C0", "C2");
 		placeBattleship("D0", "D3");
 		placeCarrier("E0", "E4");
-
-		placeDestroyer((int)(Math.random() * letters.length), "A1");
 	}
 
 	void makeMove() {
 		for(int i = 0; i < 8; i++) {
-			if (this.grid[i][i] == -1) {
-				String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
-
-				if (wasHitSunkOrMiss.equals("Hits") ||
-						wasHitSunkOrMiss.equals("Sunk")) {
-					this.grid[i][i] = 1;
-				} else {
-					this.grid[i][i] = 0;
-				}
+			if (this.step(i)) {
 				return;
 			}
 		}
 
 		for(int i = 7; i <= 0; i--) {
-			if (this.grid[i][i] == -1) {
-				String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
-
-				if (wasHitSunkOrMiss.equals("Hits") ||
-						wasHitSunkOrMiss.equals("Sunk")) {
-					this.grid[i][i] = 1;
-				} else {
-					this.grid[i][i] = 0;
-				}
+			if (this.step(i)) {
 				return;
 			}
 		}
+	}
+
+	boolean step(int i) {
+		if (this.grid[i][i].status == Status.NONE) {
+
+			String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(i));
+
+			if (wasHitSunkOrMiss.equals("Hits")) {
+				this.grid[i][i].status = Status.HIT;
+			} else if (wasHitSunkOrMiss.equals("Sunk")) {
+				this.grid[i][i].status = Status.SUNK;
+			} else {
+				this.grid[i][i].status = Status.MISS;
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	////////////////////////////////////// ^^^^^ PUT YOUR CODE ABOVE HERE ^^^^^ //////////////////////////////////////
@@ -77,8 +86,8 @@ public class Battleship {
 	Boolean moveMade = false;
 
 	public Battleship() {
-		this.grid = new int[8][8];
-		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j] = -1; }
+		this.grid = new Tile[8][8];
+		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j].status = Status.NONE; }
 		this.letters = new char[] {'A','B','C','D','E','F','G','H'};
 
 		destroyer = new String[] {"A0", "A0"};
