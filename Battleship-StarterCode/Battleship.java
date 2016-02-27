@@ -18,29 +18,129 @@ public class Battleship {
 
 	//////////////////////////////////////  PUT YOUR CODE HERE //////////////////////////////////////
 	enum Status {
-		HIT, SUNK, MISS, NONE
+		HIT, SUNK, MISS, TAKEN, NONE
 	}
 
 	class Tile {
 		int probability;
 		Status status;
+
+		public Tile () {
+			this.probability = 0;
+			this.status = Status.NONE;
+		}
 	}
 
 	char[] letters;
 	Tile[][] grid;
+	Tile[][] ourShips;
 	int WIDTH = 7;
 	boolean hitLastTurn = false;
 
+	boolean isValidPosition(int x1, int y1, int x2, int y2) {
+		if (x1 > WIDTH || x2 > WIDTH || y1 > WIDTH || y2 > WIDTH
+			|| x1 < 0 || x2 < 0 || y1 < 0 || y2 < 0) {
+			return false;
+		}
+
+		// Vertical
+		if (x1 == x2) {
+			if (y1 > y2) {
+				int t = y2;
+				y2 = y1;
+				y1 = t;
+			}
+
+			for (int i = y1; i <= y2; i++) {
+				if (this.ourShips[x1][i].status == Status.TAKEN) {
+					return false;
+				}
+			}
+		}
+		// Horizontal
+		else if (y1 == y2) {
+			if (x1 > x2) {
+				int t = x2;
+				x2 = x1;
+				x1 = t;
+			}
+
+			for (int i = x1; i <= x2; i++) {
+				if (this.ourShips[i][y1].status == Status.TAKEN) {
+					return false;
+				}
+			}
+		}
+		// Error
+		else {
+			return false;
+		}
+
+		return true;
+	}
+
+	int[] findPosition (int len) {
+		while (true) {
+			// Horizontal
+			if (Math.random() > 0.5) {
+				int x1 = (int)(Math.random() * (WIDTH - len));
+				int y1 = (int)(Math.random() * (WIDTH));
+				int x2 = x1 + len;
+				int y2 = y1;
+
+				if (this.isValidPosition(x1, y1, x2, y2)) {
+					return new int[]{x1, y1, x2, y2};
+				}
+			}
+			// Vertical
+			else {
+				int x1 = (int)(Math.random() * (WIDTH));
+				int y1 = (int)(Math.random() * (WIDTH - len));
+				int x2 = x1;
+				int y2 = y1 + len;
+
+				if (this.isValidPosition(x1, y1, x2, y2)) {
+					return new int[]{x1, y1, x2, y2};
+				}
+			}
+		}
+	}
+
 	void placeShips(String opponentID) {
+		this.ourShips = new Tile[WIDTH][WIDTH];
+
+		for (int i = 0; i < WIDTH; i++) {
+			for (int j = 0; j < WIDTH; j++) {
+				this.ourShips[i][j] = new Tile();
+			}
+		}
+
 		// Fill Grid With -1s
 		for(int i = 0; i < grid.length; i++) { for(int j = 0; j < grid[i].length; j++) grid[i][j].status = Status.NONE; }
 
 		// Place Ships
-		placeDestroyer("A0", "A1");
-		placeSubmarine("B0", "B2");
-		placeCruiser("C0", "C2");
-		placeBattleship("D0", "D3");
-		placeCarrier("E0", "E4");
+		// placeDestroyer("A0", "A1");
+		// placeSubmarine("B0", "B2");
+		// placeCruiser("C0", "C2");
+		// placeBattleship("D0", "D3");
+		// placeCarrier("E0", "E4");
+
+		// placeDestroyer(, "A1");
+
+		int[] d = findPosition(2);
+		placeDestroyer(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
+
+		d = findPosition(3);
+		placeSubmarine(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
+
+		d = findPosition(3);
+		placeCruiser(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
+
+		d = findPosition(4);
+		placeBattleship(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
+
+		d = findPosition(5);
+		placeCarrier(this.letters[d[0]] + String.valueOf(d[1]), this.letters[d[2]] + String.valueOf(d[3]));
 	}
 
 	void makeMove() {
