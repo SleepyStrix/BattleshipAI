@@ -106,8 +106,7 @@ public class Battleship {
 			}
 		}
 	}
->>>>>>> origin/master
-
+	
 	void placeShips(String opponentID) {
 		this.ourShips = new Tile[WIDTH][WIDTH];
 
@@ -217,11 +216,11 @@ public class Battleship {
 			String wasHitSunkOrMiss = placeMove(this.letters[i] + String.valueOf(j));
 
 			if (wasHitSunkOrMiss.equals("Hits")) {
-				this.grid[i][j].status = Status.HIT;
+				this.tileGrid[i][j].status = Status.HIT;
 			} else if (wasHitSunkOrMiss.equals("Sunk")) {
-				this.grid[i][j].status = Status.SUNK;
+				this.tileGrid[i][j].status = Status.SUNK;
 			} else {
-				this.grid[i][j].status = Status.MISS;
+				this.tileGrid[i][j].status = Status.MISS;
 			}
 
 			return true;
