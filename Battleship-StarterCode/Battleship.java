@@ -33,9 +33,11 @@ public class Battleship {
 
 	char[] letters;
 	int[][] grid;
-	Tile[][] tileGrid;
+	Tile[][] tileGrid = new Tile[8][8];
 	Tile[][] ourShips;
 	int WIDTH = 7;
+	int firej = 0;
+	int firei = 0;
 	boolean hitLastTurn = false;
 
 	boolean isValidPosition(int x1, int y1, int x2, int y2) {
@@ -116,10 +118,10 @@ public class Battleship {
 			}
 		}
 
-		// Fill Grid With -1s
+		// Fill Grid With 0 probability
 		for(int i = 0; i < tileGrid.length; i++) {
 			for(int j = 0; j < tileGrid[i].length; j++) {
-				tileGrid[i][j] = new Tile(); tileGrid[i][j].probability = 0;
+				tileGrid[i][j] = new Tile();
 			}
 		}
 			
@@ -151,23 +153,12 @@ public class Battleship {
 
 	void makeMove() {
 		moveDecision();
-		/*for(int i = 0; i < 8; i++) {
-			if (this.step(i)) {
-				return;
-			}
-		}
-
-		for(int i = 7; i <= 0; i--) {
-			if (this.step(i)) {
-				return;
-			}
-		}*/
 	}
 	
 	void moveDecision() {
 		Tile t = highestProbability();
 		if (t != null) {
-			//fire at position of Tile t
+			step(firei, firej);
 			
 		} else {
 			diagonalSearch();
@@ -177,8 +168,10 @@ public class Battleship {
 	Tile highestProbability() {
 		Tile best = new Tile();
 		best.probability = -1;
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
+		int i = 0;
+		int j = 0;
+		for (i = 0; i < 8; i++) {
+			for (j = 0; j < 8; j++) {
 				Tile t = tileGrid[i][j];
 				if (t.status == Status.NONE) {
 					if (t.probability > best.probability) {
@@ -191,6 +184,8 @@ public class Battleship {
 			return null;
 		}
 		else {
+			firei = i;
+			firej =j;
 			return best;
 		}
 	}
@@ -227,49 +222,6 @@ public class Battleship {
 		}
 
 		return false;
-	}
-	
-	void fireAtPosition(int i, int j) {
-		String target = "";
-		String row = "";
-		String col = "";
-		switch (i) {
-			case(0): {
-				row = "A";
-				break;
-			}
-			case(1): {
-				row = "B";
-				break;
-			}
-			case(2): {
-				row = "C";
-				break;
-			}
-			case(3): {
-				row = "D";
-				break;
-			}
-			case(4): {
-				row = "E";
-				break;
-			}
-			case(5): {
-				row = "F";
-				break;
-			}
-			case(6): {
-				row = "G";
-				break;
-			}
-			case(7): {
-				row = "H";
-				break;
-			}
-		}
-		col = "" + j;
-		target = row + col;
-		placeMove(target);
 	}
 
 	////////////////////////////////////// ^^^^^ PUT YOUR CODE ABOVE HERE ^^^^^ //////////////////////////////////////
